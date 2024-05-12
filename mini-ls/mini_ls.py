@@ -13,30 +13,30 @@ def find_owner_name(owner_id):
             if int(fields[2]) == owner_id:
                 return fields[0]  # Return username
     return str(owner_id)  # If owner not found, return ID as string
-
+ 
 # Get file information (owner, permissions, modified time)
 def get_file_info(path):
     try:
         stat_info = os.stat(path)
-        owner_id = stat_info.st_uid
-        owner_name = find_owner_name(owner_id)
+        owner_id = stat_info.st_uid # returns owner id
+        owner_name = find_owner_name(owner_id) # change ID to name
         permission = stat.filemode(stat_info.st_mode)
         modified_time = datetime.datetime.fromtimestamp(stat_info.st_mtime).strftime("%Y-%m-%d %H:%M:%S")
         return owner_name, permission, modified_time
     except Exception as e:
         print(f"Error getting information for {path}: {e}", file=sys.stderr)
         sys.exit(1)
-
+   
 # Get list information about given paths
 def mini_ls(paths, recursive=False):
     for path in paths:
         if os.path.exists(path):
-            # If it's a file
+            # If its file
             if os.path.isfile(path):
                 owner, permission, modified_time = get_file_info(path)
                 if owner:
                     print(f"{owner}  {permission}  {modified_time}  {path}")
-            # If it's a folder        
+            # If its folder
             elif os.path.isdir(path):
                 if recursive:
                     for root, dirs, files in os.walk(path):
@@ -48,9 +48,6 @@ def mini_ls(paths, recursive=False):
                 else:
                     print(f"Error: {path} is a directory. Use -r option for recursive listing.", file=sys.stderr)
                     sys.exit(1)
-            else:
-                print(f"Error: {path} is not a regular file or directory.", file=sys.stderr)
-                sys.exit(1)
         else:
             print(f"Error: {path} does not exist.", file=sys.stderr)
             sys.exit(1)
@@ -59,7 +56,6 @@ def main():
     args = sys.argv[1:]
 
     if not args or "--help" in args:
-        # Print usage information if no arguments provided or if argument is "--help"
         print("\nUsage: ./mini_ls.py [-r] [FILE ...]\n\n" +
               "- [-r] option will make mini_ls run recursively on any directory it comes across\n"+
               "- FILE can be zero or more arguments. If zero args are given, mini_ls will list information about the current directory.\n")

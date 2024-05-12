@@ -30,7 +30,7 @@ def main():
 
     if not args or "--help" in args:
         # Print usage information if no arguments provided or "--help" option specified
-        print("\nUsage: ./mini_grep.py [-q] -e PATTERN [files ...]\n\n" +
+        print("\nUsage: ./mini_grep.py [-q] -e PATTERN [FILE ...]\n\n" +
               "- [-q] only outputs lines but omits the matching line numbers\n"+
               "- PATTERN has to be a valid regex\n"+
               "- FILE can be zero or more arguments. If zero args are given, mini-grep will parse entries from the stdin\n")

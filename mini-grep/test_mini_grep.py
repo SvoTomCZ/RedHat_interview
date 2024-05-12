@@ -6,7 +6,7 @@ import subprocess
 def test_mini_grep():
     failed_tests = []
 
-    # Test Case 1
+    # Test Case 1: Test with a simple pattern
     pattern = "hello"
     test_files = ["test_files/test1.txt", "test_files/test2.txt"]
     expected_output = ["test_files/test1.txt:1: hello", "test_files/test2.txt:2: hello world"]
