@@ -38,14 +38,48 @@ def format_bytes(bytes_value, human_readable=False):
     else:
         return str(bytes_value) + " B"
 
+# Print disk space usage for given paths
+def mini_df(paths, human_readable=False):
+    total_space, free_space = get_disk_space()
+    print(f"\nTotal Space: {format_bytes(total_space, human_readable)}")
+    print(f"Free Space: {format_bytes(free_space, human_readable)}\n")
+    
+    for path in paths:
+        if os.path.isfile(path):
+            size = get_file_disk_space(path)
+            print(f"File: {path}")
+        elif os.path.isdir(path):
+            size = get_folder_disk_space(path)
+            print(f"Folder: {path}")
+        else:
+            print(f"Error: {path} does not exist.\n", file=sys.stderr)
+            continue
+        size_str = format_bytes(size, human_readable)
+        print(f"Used space: {size_str}")
+        print()
+
 def main():
     args = sys.argv[1:]
     
+    # bad argument check
+    invalid_arg = next((arg for arg in args if arg.startswith("-") and arg not in ("-h", "--help")), None)
+    if invalid_arg:
+        print(f"Error: Invalid argument '{invalid_arg}'. Use --help for usage information.", file=sys.stderr)
+        sys.exit(1)
+
     if "--help" in args:
         print("\nUsage: ./mini_df.py [-h] [PATH...]\n\n" +
               "- [-h] will output the result in human-readable format\n"+
               "- PATH can be zero or more arguments. IF zero args are given, mini_df will list the disk space usage of the current directory.\n")
         sys.exit(1)
+
+    # if -h is present
+    human_readable = "-h" in args
+    paths = [path for path in args if path !="-h"]
+    # if PATH is zero
+    if not paths:
+        paths = ['.']
+    mini_df(paths, human_readable)
 
 if __name__ == "__main__":
     main()
