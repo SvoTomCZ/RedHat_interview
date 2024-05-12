@@ -105,3 +105,58 @@ python3 test_mini_ls.py
 ```
 
 The test script will run each test case and report whether it passed or failed. If any test case fails, it will provide details about the failed tests.
+
+
+## mini-df
+
+`mini-df` outputs the file system disk space usage of each entry in
+PATH. The information required is: Total Space, Free Space, Used
+Space. The result should be in Bytes.
+
+### Usage
+
+```bash
+./mini_df.py [-h] [PATH...]
+```
+
+- `[-h]`: will output the result in human-readable format.
+- `[PATH...]`: an be zero or more arguments. IF zero args are given, `mini-df` will list the disk space usage of the current directory.
+
+### Example
+
+```bash
+./mini_df.py -h ..
+```
+
+Alternatively, you can use:
+
+```bash
+python3 mini_df.py -h ..
+```
+
+This command will output:
+
+```bash
+Total Space: 72.35 GB
+Free Space: 53.19 GB
+Folder: ..
+Used space: 93.72 KB
+```
+
+### Testing
+
+Testing for mini-grep is included in the `test_mini_df.py` file. This script tests the functionality of mini-grep with two sample files, `test_files/test1.txt` and `test_files/test2.txt`.
+
+To run the tests, execute the following command:
+
+```bash
+./test_mini_df.py
+```
+
+Or:
+
+```bash
+python3 test_mini_df.py
+```
+
+The test script will run each test case and report whether it passed or failed. If any test case fails, it will provide details about the failed tests.
