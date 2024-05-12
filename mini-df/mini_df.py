@@ -28,7 +28,7 @@ def get_folder_disk_space(path):
             total_size += os.path.getsize(file_path)
     return total_size
 
-# Format bytes into human-readable format if requested
+# Format bytes into human-readable format if -h arg is present
 def format_bytes(bytes_value, human_readable=False):
     if human_readable:
         for unit in ['B', 'KB', 'MB', 'GB', 'TB']:
@@ -36,32 +36,42 @@ def format_bytes(bytes_value, human_readable=False):
                 return f"{bytes_value:.2f} {unit}"
             bytes_value /= 1024
     else:
-        return str(bytes_value) + " B"
-
+        return f"{bytes_value:.0f} B"
+    
 # Print disk space usage for given paths
 def mini_df(paths, human_readable=False):
-    total_space, free_space = get_disk_space()
-    print(f"\nTotal Space: {format_bytes(total_space, human_readable)}")
-    print(f"Free Space: {format_bytes(free_space, human_readable)}\n")
+    if not paths:
+        paths = ['.']
     
     for path in paths:
+        # If path is file
         if os.path.isfile(path):
             size = get_file_disk_space(path)
+            size_str = format_bytes(size, human_readable)
             print(f"File: {path}")
+            print(f"Used space: {size_str}")
+            print()
+        # If path is folder
         elif os.path.isdir(path):
+            total_space, free_space = get_disk_space()
+            total_space_str = format_bytes(total_space, human_readable)
+            free_space_str = format_bytes(free_space, human_readable)
+            print(f"\nTotal Space: {total_space_str}")
+            print(f"Free Space: {free_space_str}")
             size = get_folder_disk_space(path)
+            size_str = format_bytes(size, human_readable)
             print(f"Folder: {path}")
+            print(f"Used space: {size_str}")
+            print()
+        # Path doesnt exists    
         else:
-            print(f"Error: {path} does not exist.\n", file=sys.stderr)
-            continue
-        size_str = format_bytes(size, human_readable)
-        print(f"Used space: {size_str}")
-        print()
+            print(f"Error: {path} does not exist.", file=sys.stderr)
+            sys.exit(1)
 
 def main():
     args = sys.argv[1:]
     
-    # bad argument check
+    # Bad argument check
     invalid_arg = next((arg for arg in args if arg.startswith("-") and arg not in ("-h", "--help")), None)
     if invalid_arg:
         print(f"Error: Invalid argument '{invalid_arg}'. Use --help for usage information.", file=sys.stderr)
@@ -75,10 +85,8 @@ def main():
 
     # if -h is present
     human_readable = "-h" in args
-    paths = [path for path in args if path !="-h"]
-    # if PATH is zero
-    if not paths:
-        paths = ['.']
+    paths = [path for path in args if path != "-h"]
+    
     mini_df(paths, human_readable)
 
 if __name__ == "__main__":
