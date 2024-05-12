@@ -28,6 +28,12 @@ def mini_grep(pattern, files, quiet=False):
 def main():
     args = sys.argv[1:]  # Get command line arguments, excluding script name
 
+    # bad argument check
+    invalid_arg = next((arg for arg in args if arg.startswith("-") and arg not in ("-q", "-e", "--help")), None)
+    if invalid_arg:
+        print(f"Error: Invalid argument '{invalid_arg}'. Use --help for usage information.", file=sys.stderr)
+        sys.exit(1)
+
     if not args or "--help" in args:
         # Print usage information if no arguments provided or "--help" option specified
         print("\nUsage: ./mini_grep.py [-q] -e PATTERN [FILE ...]\n\n" +

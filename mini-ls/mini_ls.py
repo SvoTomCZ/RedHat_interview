@@ -55,6 +55,12 @@ def mini_ls(paths, recursive=False):
 def main():
     args = sys.argv[1:]
 
+    # bad argument check
+    invalid_arg = next((arg for arg in args if arg.startswith("-") and arg not in ("-r", "--help")), None)
+    if invalid_arg:
+        print(f"Error: Invalid argument '{invalid_arg}'. Use --help for usage information.", file=sys.stderr)
+        sys.exit(1)
+
     if not args or "--help" in args:
         print("\nUsage: ./mini_ls.py [-r] [FILE ...]\n\n" +
               "- [-r] option will make mini_ls run recursively on any directory it comes across\n"+
