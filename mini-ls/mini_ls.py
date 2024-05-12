@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 
+import os
 import sys
+import stat
+import datetime
 
 # Find owner name from user ID
 def find_owner_name(owner_id):
@@ -10,6 +13,19 @@ def find_owner_name(owner_id):
             if int(fields[2]) == owner_id:
                 return fields[0]  # Return username
     return str(owner_id)  # If owner not found, return ID as string
+
+# Get file information (owner, permissions, modified time)
+def get_file_info(path):
+    try:
+        stat_info = os.stat(path)
+        owner_id = stat_info.st_uid
+        owner_name = find_owner_name(owner_id)
+        permission = stat.filemode(stat_info.st_mode)
+        modified_time = datetime.datetime.fromtimestamp(stat_info.st_mtime).strftime("%Y-%m-%d %H:%M:%S")
+        return owner_name, permission, modified_time
+    except Exception as e:
+        print(f"Error getting information for {path}: {e}", file=sys.stderr)
+        sys.exit(1)
 
 def main():
     args = sys.argv[1:]
