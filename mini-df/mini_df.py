@@ -27,3 +27,25 @@ def get_folder_disk_space(path):
             file_path = os.path.join(dirpath, filename)
             total_size += os.path.getsize(file_path)
     return total_size
+
+# Format bytes into human-readable format if requested
+def format_bytes(bytes_value, human_readable=False):
+    if human_readable:
+        for unit in ['B', 'KB', 'MB', 'GB', 'TB']:
+            if bytes_value < 1024:
+                return f"{bytes_value:.2f} {unit}"
+            bytes_value /= 1024
+    else:
+        return str(bytes_value) + " B"
+
+def main():
+    args = sys.argv[1:]
+    
+    if "--help" in args:
+        print("\nUsage: ./mini_df.py [-h] [PATH...]\n\n" +
+              "- [-h] will output the result in human-readable format\n"+
+              "- PATH can be zero or more arguments. IF zero args are given, mini_df will list the disk space usage of the current directory.\n")
+        sys.exit(1)
+
+if __name__ == "__main__":
+    main()
